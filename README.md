@@ -1,9 +1,8 @@
 # Product Name
-> Short blurb about what your product does.
+> Toolbox for data projects.
 
 [![Build Status][travis-image]][travis-url]
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Downloads Stats][npm-downloads]][npm-url]
 
 This is a joint project between Jordan Carson and Matthew Turner to create a library that will facilitate data analytics, engineering, and science work.
 
@@ -26,8 +25,6 @@ edit autoexec.bat
 ## Usage example
 
 A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
-
-_For more examples and usage, please refer to the [Wiki][wiki]._
 
 ## Development setup
 
