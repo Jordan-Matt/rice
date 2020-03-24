@@ -1,4 +1,4 @@
-# Product Name
+# Rice
 > Toolbox for data projects.
 
 [![Build Status][travis-image]][travis-url]

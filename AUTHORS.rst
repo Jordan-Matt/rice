@@ -2,10 +2,11 @@
 Credits
 =======
 
-Development Lead
+Development Leads
 ----------------
 
 * Matthew Turner <matthew.m.turner@outlook.com>
+* Jordan Carson <jordanlouiscarson@gmail.com>
 
 Contributors
 ------------
