@@ -41,5 +41,5 @@ output/*/index.html
 # Sphinx
 docs/_build
 
-# VS Code Config
-settings.json
+# VS Code
+.vscode

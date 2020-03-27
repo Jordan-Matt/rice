@@ -29,7 +29,7 @@ def calc_cardinality(iterable, verbose=False):
 # TODO Add a cardinality row
 
 
-def describe_stats(df):
+def describe_stats(df_to_describe):
     """[summary]
 
     Arguments:
@@ -38,7 +38,7 @@ def describe_stats(df):
     Returns:
         [type] -- [description]
     """
-
+    df = df_to_describe.describe()
     df.loc["cv"] = df.loc["std"] / df.loc["mean"]
     df.loc["iqr"] = df.loc["75%"] - df.loc["25%"]
     # Index order
