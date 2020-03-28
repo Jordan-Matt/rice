@@ -1,9 +1,5 @@
 import pandas as pd
-from ..data_blend import Field
-
-# print(''.join(str(i) for i in pd.__version__))
-# print(str(pd.__version__).replace('.', ''))
-# print(pd.__version__[2:4])
+from rice.data_blend import Field
 
 
 def df_apply(df, funcs):
@@ -37,9 +33,9 @@ def df_astype(df, types):
     if not isinstance(types, dict):
         raise ValueError(f'Expected {dict.__name__} as argument of {__name__}, got={type(types)}')
 
-    if pd.__version__[2:4] < 19:
-        for col, dtype in types.items():
-            df[col] = df[col].astype(dtype)
+    # if int(pd.__version__[2:4]) < 19:
+    for col, dtype in types.items():
+        df[col] = df[col].astype(dtype)
     else:
         df = df.astype(types)
 
