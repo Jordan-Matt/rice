@@ -2,7 +2,6 @@ import os
 import logging
 import fastavro
 import pandas as pd
-# print(pd.__version__)
 
 
 def read_avro(path):
@@ -11,7 +10,7 @@ def read_avro(path):
     @param path: filepath
     @return: pandas.DataFrame
     """
-    with open(path, 'rb') as f:
+    with open(path, "rb") as f:
         reader = fastavro.reader(f)
         records = [r for r in reader]
         return pd.DataFrame.from_records(records)
@@ -25,12 +24,11 @@ def read_avro_blocks(path, logger=None):
     """
     if not os.path.exists(path):
         if logger:
-            logger.error(f'No file found: {path}')
+            logger.error(f"No file found: {path}")
         else:
-            print(f'No file found: {path}')
+            print(f"No file found: {path}")
 
-    with open(path, 'rb') as f:
+    with open(path, "rb") as f:
         reader = fastavro.block_reader(f)
         for block in reader:
             yield block
-
