@@ -1,8 +1,7 @@
 # Rice
 > Toolbox for data projects.
 
-[![Build Status][travis-image]][travis-url]
-![](https://github.com/actions/hello-world/workflows/Greet%20Everyone/badge.svg)
+![](https://github.com/Jordan-Matt/rice/workflows/pythonapp.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is a joint project between Jordan Carson and Matthew Turner to create a library that will facilitate data analytics, engineering, and science work.
