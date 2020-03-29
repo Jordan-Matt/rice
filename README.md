@@ -1,7 +1,8 @@
 # Rice
 > Toolbox for data projects.
 
-[![Build Status][travis-image]][travis-url]
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![](https://github.com/Jordan-Matt/rice/workflows/tests/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This is a joint project between Jordan Carson and Matthew Turner to create a library that will facilitate data analytics, engineering, and science work.
