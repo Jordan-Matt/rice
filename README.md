@@ -2,7 +2,7 @@
 > Toolbox for data projects.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![](https://github.com/Jordan-Matt/rice/workflows/tests/badge.svg)
+![](https://github.com/Jordan-Matt/rice/workflows/pytest/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/Jordan-Matt/rice/badge.svg)](https://coveralls.io/github/Jordan-Matt/rice)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
