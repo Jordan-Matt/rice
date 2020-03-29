@@ -13,6 +13,12 @@ import pypyodbc
 MAX_VARCHAR = 8000
 
 
+def create_postgresql_conn_str(db_name, user_name, password, host, port):
+    return (
+        f"dbname={db_name} user={user_name} password={password} host={host} port={port}"
+    )
+
+
 def get_table_details(schema, table, connect_str):
     """
     Returns the characteristics of the table 'table' within the schema 'schema'
