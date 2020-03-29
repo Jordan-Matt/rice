@@ -17,6 +17,15 @@ def test_data_blend_rename():
 def test_data_blend_astype():
     df_typechange = df_astype(df, CONFIG_ASTYPE)
     final_types = [str(df_typechange[col].dtype) for col in df_typechange.columns]
-
     df_expected_types = ["int64", "object"]
     assert list(final_types) == df_expected_types
+
+
+def test_data_blend_apply():
+    def func(row):
+        return row ** 2
+
+    astype = {"var": "int64", "var2": "float"}
+    df_new = df_apply(df_astype(df, astype), func)
+    df_example = pd.DataFrame({"var": [1.0, 4.0, 9.0], "var2": [1.0, 4.0, 9.0]})
+    assert df_new.equals(df_example)
