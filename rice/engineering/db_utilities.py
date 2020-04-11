@@ -4,9 +4,7 @@ import datetime
 import numpy as np
 import pandas as pd
 import sys
-
 from types import MappingProxyType
-
 import pypyodbc
 
 
@@ -20,9 +18,9 @@ def get_table_details(schema, table, connect_str):
     TODO: Finish query
     """
 
-    fields = {'character_length': 'int32'}
+    fields = {"character_length": "int32"}
     query = f"""
-        SELECT 
+        SELECT
             c.TABLE_SCHEMA          as table_schema
             ,c.TABLE_NAME           as table_name
             ,COLUMN_NAME            as column_name
@@ -40,10 +38,10 @@ def get_table_details(schema, table, connect_str):
                 ELSE
                     '[' + COLUMN_NAME + '] ' + DATA_TYPE
             END as composite_name
-        FROM 
+        FROM
             INFORMATION_SCHEMA.COLUMNS as c, INFORMATION_SCHEMA.SCHEMA as t
-            
-        WHERE 
+
+        WHERE
             TABLE_TYPE = 'BASE TABLE' AND c.Table_Schema = t.Table_Schema AND c.Table_Name and t.TABLE_NAME AND
             c.Table_Schema = '{schema}' AND c.TABLE_NAME = '{table}'
         ORDER BY c.Table_Schema, c.TABLE_NAME
@@ -57,8 +55,18 @@ def get_table_details(schema, table, connect_str):
         return output_df
 
 
-def bulk_insert(df, conn_str, schema, table, pre_insert_query=None, chunks=10**4, primary_keys=None, identity=False,
-                identity_name='ID', execute_many=True):
+def bulk_insert(
+    df,
+    conn_str,
+    schema,
+    table,
+    pre_insert_query=None,
+    chunks=10 ** 4,
+    primary_keys=None,
+    identity=False,
+    identity_name="ID",
+    execute_many=True,
+):
     """
     Function to insert data in bulk-chunks. If a delete in the table is required, the corresponding `pre_insert_query`
     is executed before the insert.
@@ -76,5 +84,3 @@ def bulk_insert(df, conn_str, schema, table, pre_insert_query=None, chunks=10**4
     :return:
     """
     ...
-
-

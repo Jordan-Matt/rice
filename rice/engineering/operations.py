@@ -1,5 +1,5 @@
 import pandas as pd
-from rice.data_blend import Field
+from rice.engineering import Field
 
 
 def df_apply(df, funcs):
@@ -10,8 +10,10 @@ def df_apply(df, funcs):
     @return: resulting pandas.DataFrame
     """
     if not callable(funcs) and not isinstance(funcs, dict):
-        raise ValueError(f"Expected {', '.join([a.__name__ for a in [callable, dict]])} "
-                         f"as argument of {__name__}, got={type(funcs)}")
+        raise ValueError(
+            f"Expected {', '.join([a.__name__ for a in [callable, dict]])} "
+            f"as argument of {__name__}, got={type(funcs)}"
+        )
 
     if callable(funcs):
         return df.apply(funcs, axis=1)
@@ -31,7 +33,9 @@ def df_astype(df, types):
     @return:
     """
     if not isinstance(types, dict):
-        raise ValueError(f'Expected {dict.__name__} as argument of {__name__}, got={type(types)}')
+        raise ValueError(
+            f"Expected {dict.__name__} as argument of {__name__}, got={type(types)}"
+        )
 
     # if int(pd.__version__[2:4]) < 19:
     for col, dtype in types.items():
@@ -42,7 +46,7 @@ def df_astype(df, types):
     return df
 
 
-def df_drop(df, fields, errors='raise'):
+def df_drop(df, fields, errors="raise"):
     """
     Generic function that is independent of pandas version to drop columns in a data frame.
     @param df: pandas.DataFrame
@@ -57,19 +61,17 @@ def df_drop(df, fields, errors='raise'):
         return df.drop(
             labels=[k for k, v in fields.items() if v is Field.DROP],
             axis=1,
-            errors=errors
+            errors=errors,
         )
 
     elif isinstance(fields, (list, set, str, tuple)):
-        return df.drop(
-            fields,
-            axis=1,
-            errors=errors
-        )
+        return df.drop(fields, axis=1, errors=errors)
 
     else:
-        raise ValueError(f'Unknown structure to drop fields, expected None, dict, list, set, str, or tuple.'
-                         f'Got {type(fields)} instead.')
+        raise ValueError(
+            f"Unknown structure to drop fields, expected None, dict, list, set, str, or tuple."
+            f"Got {type(fields)} instead."
+        )
 
 
 def df_map(df, funcs, na_action=None):
@@ -80,14 +82,18 @@ def df_map(df, funcs, na_action=None):
     @param na_action: action for Na
     @return: resulting pandas.DataFrame
     """
-    _na_action = [None, 'ignore']
+    _na_action = [None, "ignore"]
 
-    if not na_action in _na_action:
-        raise ValueError(f"Expected {', '.join([str(a) for a in _na_action])} as argument of na_action.")
+    if na_action not in _na_action:
+        raise ValueError(
+            f"Expected {', '.join([str(a) for a in _na_action])} as argument of na_action."
+        )
 
     if not callable(funcs) and not isinstance(funcs, dict):
-        raise ValueError(f"Expected {', '.join([a.__name__ for a in [callable, dict]])} as argument of {__name__}"
-                         f", got={type(funcs)}")
+        raise ValueError(
+            f"Expected {', '.join([a.__name__ for a in [callable, dict]])} as argument of {__name__}"
+            f", got={type(funcs)}"
+        )
 
     if callable(funcs):
         return df.map(funcs, na_action)
@@ -110,11 +116,17 @@ def df_rename(df, fields):
 
     elif isinstance(fields, dict):
         return df.rename(
-            columns={k: v for k, v in fields.items() if v not in [None, Field.DROP, Field.KEEP]}
+            columns={
+                k: v
+                for k, v in fields.items()
+                if v not in [None, Field.DROP, Field.KEEP]
+            }
         )
 
     else:
-        raise ValueError(f"Expected dictionary as argument of df_rename, got={type(fields)}")
+        raise ValueError(
+            f"Expected dictionary as argument of df_rename, got={type(fields)}"
+        )
 
 
 def df_subset(df, fields):
@@ -131,7 +143,9 @@ def df_subset(df, fields):
         return pd.DataFrame(df, columns=fields)
 
     else:
-        raise ValueError(f"Unknown structure to do subset, expected dict, list, set, str or tuple. Got={type(fields)}")
+        raise ValueError(
+            f"Unknown structure to do subset, expected dict, list, set, str or tuple. Got={type(fields)}"
+        )
 
 
 def df_prepare(df, fields):
@@ -142,4 +156,3 @@ def df_prepare(df, fields):
     @return: blended pandas.DataFrame
     """
     return df_rename(df_drop(df_subset(df, fields), fields), fields)
-

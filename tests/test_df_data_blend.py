@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from rice.data_blend.operations import df_astype, df_rename, df_apply
+from rice.engineering.operations import df_astype, df_rename, df_apply
 
 # constants
 DATA_TEST_1 = {"var": ["1", "2", "3"], "var2": [1, 2, 3]}
