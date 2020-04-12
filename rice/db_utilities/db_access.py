@@ -27,8 +27,6 @@ def get_connection(
         "redshift": "psycopg2",
     }
     library = config_dict.get(database_type) if not library else library
-    print("Library", library)
-    print("Dataase type", database_type)
     if database_type in ["postgresql", "redshift"]:
         if library == "psycopg2":
             try:
