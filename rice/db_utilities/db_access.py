@@ -1,92 +1,108 @@
 import sys
 import pandas as pd
 import datetime
+import time
 import logging
-from ..data_blend import df_astype
-# from .data_blend import df_astype
 
 
-def get_connection(conn_str, db_type, library=None):
+def get_connection(
+    connection_string: str, database_type: str, library=None, logger=print
+):
     """
-    Opens a connection to a database.
-    @param conn_str:
-    @param db_type:
-    @param library:
-    @return:
-    """
-    conn_lib = None
-    library = {
-        'sqlserver': 'pyodbc',
-        'postgresql': 'psypg2',
-        'oracle': 'cx_Oracle'
-    }.get(db_type) if not library else library
+    Opens a connection to a database, which will then feed subsequent functions.
+    Args:
+        connection_string: the connection string to be used to database connection
+        database_type: name of database type
+        library: name of library to use to connect to database_type
+        logger: Optional - allows to change between print and logging.info
 
-    if db_type == 'sqlserver':
-        if library == 'pypyodbc':
+    Returns:
+        connection_library.connect(connection_string)
+    """
+    connection_library = None
+    config_dict = {
+        "postgresql": "psycopg2",
+        "oracle": "cx_Oracle",
+        "sqlserver": "pyodbc",
+        "redshift": "psycopg2",
+    }
+    library = config_dict.get(database_type) if not library else library
+    print("Library", library)
+    print("Dataase type", database_type)
+    if database_type in ["postgresql", "redshift"]:
+        if library == "psycopg2":
             try:
-                import pypyodbc as conn_lib
+                import psycopg2 as connection_library
             except ImportError:
-                print("You must have pypyodbc installed. Run pip install pypyodbc.")
-                sys.exit(1)
-        elif library == 'pyodbc':
+                logger(f"{library} was not found. run `pip install {library}`")
+                sys.exit()
+    elif database_type == "oracle":
+        if library == "cx_Oracle":
             try:
-                import pyodbc as conn_lib
+                import cx_oracle as connection_library
             except ImportError:
-                logging.warning("pyodbc not found. Falling back to pypyodbc")
-                try:
-                    import pypyodbc as conn_lib
-                except ImportError:
-                    print("You must have pypyodbc installed. Run pip install pypyodbc.")
-                    sys.exit(1)
-    elif db_type == 'postgresql':
-        if library == 'psypg2':
-            print('We havent set up support for postgresql')
-    elif db_type == 'oraclesql':
-        print('We havent set up support for Oracle')
+                logger(f"{library} was not found. run `pip install {library}`")
+                sys.exit()
+    elif database_type == "sqlserver":
+        if library == "pypyodbc":
+            try:
+                import pypyodbc as connection_library
+            except ImportError:
+                logger(f"{library} was not found. run `pip install {library}`")
+                sys.exit()
+        elif library == "pyodbc":
+            try:
+                import pyodbc as connection_library
+            except ImportError:
+                logger(f"{library} was not found. run `pip install {library}`")
+                sys.exit()
+    if not connection_library:
+        raise ValueError(f"Invalid {database_type} and {library} combinations.")
+    return connection_library.connect(connection_string)
 
-    if not conn_lib:
-        raise ValueError(f'Invalid db_type/library combo. db_type={db_type}, library={library}')
-    return conn_lib.connect(conn_str)
 
-
-def query_sql_pandas(sql_req, conn_str, db_type='sqlserver', dtypes=None, fill_na=None, library=None,
-                     logger=logging.info):
+def query_df(
+    sql_string,
+    connection_string,
+    database_type="postgresql",
+    library="psycopg2",
+    logger=print,
+):
     """
-    Connects to the database, puts all of the row data into a Pandas table, close connection, and returns the pandas
-    dataframe.
+    Returns a pandas dataframe from serger.
+    Args:
+        sql_string: SQL query to put into pandas.DataFrame
+        connection_string: connection_string to the database
+        database_type: the type of database
+        library: the python module to use for connecting to database
 
-    @param sql_req: sql query
-    @param conn_str: connection_string
-    @param db_type: type of database, default = sqlserver
-    @param dtypes: assign data types to columns
-    @param fill_na: fills None values in DataFrame.
-    @param library: library to use for provided db_type
-    @return: DataFrame (from the server)
+    Returns:
+        pandas.DataFrame (read from server)
     """
-    logger('Running SQL Query: ' + ' '.join(sql_req.split()))
-
-    start_time = datetime.datetime.now()
-    connection = get_connection(conn_str, db_type, library)
-
+    start = datetime.datetime.now()
+    connection = get_connection(
+        connection_string, database_type=database_type, library=library
+    )
     try:
-        data = pd.read_sql(sql_req, connection)
-        if fill_na:
-            data.fillna(value=fill_na, inplace=True)
-        if dtypes:
-            data = df_astype(data, dtypes)
+        data = pd.read_sql(sql_string, connection)
 
     except Exception as err:
-        logging.exception(f'[{__name__}] Error reading SQL query: {err} - Time Took: '
-                          f'{(datetime.datetime.now() - start_time).total_seconds()} seconds.')
-
-        if db_type == 'sqlserver' and library != 'pypyodbc':
-            logger('Using fallback library pypyodbc')
-            return query_sql_pandas(sql_req, conn_str, db_type, dtypes, fill_na, library='pypyodbc')
+        # logger(f'ERROR: {err}')
+        logger(
+            f"[{__name__}] Error reading SQL query: {err} - Time Elapsed: "
+            f"{(datetime.datetime.now() - start).total_seconds()} seconds"
+        )
+        if database_type in ["oracle", "sqlserver"] and library in [
+            "cx_Oracle",
+            "pyodbc",
+        ]:
+            logger("Using fallback library pypyodbc")
+            return query_df(
+                sql_string, connection_string, database_type, library="pypyodbc"
+            )
         return pd.DataFrame()
-
     finally:
         connection.close()
-
-    end_time = datetime.datetime.now()
-    logger(f'Retreived {len(data)} rows in {(end_time - start_time).total_seconds()} seconds.')
+    end = datetime.datetime.now()
+    logger(f"Retrieved {len(data)} rows in {(end-start).total_seconds()} seconds.")
     return data
