@@ -43,3 +43,13 @@ docs/_build
 
 # VS Code
 .vscode
+
+# notebooks
+.ipynb_checkpoints
+database.ini
+
+# PyCharm
+.idea
+
+# PyTest Cache
+.pytest_cache
