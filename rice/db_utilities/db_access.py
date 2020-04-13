@@ -33,27 +33,27 @@ def get_connection(
                 import psycopg2 as connection_library
             except ImportError:
                 logger(f"{library} was not found. run `pip install {library}`")
-                sys.exit()
+                sys.exit(1)
     elif database_type == "oracle":
         if library == "cx_Oracle":
             try:
                 import cx_oracle as connection_library
             except ImportError:
                 logger(f"{library} was not found. run `pip install {library}`")
-                sys.exit()
+                sys.exit(1)
     elif database_type == "sqlserver":
         if library == "pypyodbc":
             try:
                 import pypyodbc as connection_library
             except ImportError:
                 logger(f"{library} was not found. run `pip install {library}`")
-                sys.exit()
+                sys.exit(1)
         elif library == "pyodbc":
             try:
                 import pyodbc as connection_library
             except ImportError:
                 logger(f"{library} was not found. run `pip install {library}`")
-                sys.exit()
+                sys.exit(1)
     if not connection_library:
         raise ValueError(f"Invalid {database_type} and {library} combinations.")
     return connection_library.connect(connection_string)
@@ -67,12 +67,13 @@ def query_df(
     logger=print,
 ):
     """
-    Returns a pandas dataframe from serger.
+    Returns a pandas.DataFrame from database_type server.
     Args:
         sql_string: SQL query to put into pandas.DataFrame
         connection_string: connection_string to the database
         database_type: the type of database
         library: the python module to use for connecting to database
+        logger: logging to console - print or logging.info
 
     Returns:
         pandas.DataFrame (read from server)
