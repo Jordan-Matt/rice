@@ -347,13 +347,13 @@ def bulk_insert(
     :param conn_str: connection_string
     :param schema: database.schema
     :param table: database.schema.table (only table)
-    :param pre_insert_query: query to be executed before the insert
-    :param chunks: number of rows to be inserted before the insert
-    :param primary_keys: primary keys of the table
-    :param identity: whether ID column is to be inc
-    :param identity_name:
-    :param execute_many:
-    :return:
+    :param pre_insert_query: Optional: query to be executed before the insert
+    :param chunks: Optional: Default 10000 - number of rows to be inserted before the insert
+    :param primary_keys: Optional: Default None - primary keys of the table
+    :param identity: Optional: Default None - whether ID column is to be inc
+    :param identity_name: Optional: Default "ID" - name of identity column
+    :param execute_many: Optional: Default - True boolean to execute many into the dataframe
+    :return: None
     """
     prefix = f"bulk insert [{schema}].[{table}]"
     try:
